@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "dev": "nodemon server.js",
-    "start": "node server.js"
+    "start": "node server.js",
+    "seed:manager": "node scripts/seedManager.js"
   },
   "keywords": [],
   "author": "",

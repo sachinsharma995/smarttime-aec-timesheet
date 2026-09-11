@@ -12,7 +12,6 @@ export default function Register() {
     email: "",
     password: "",
     confirmPassword: "",
-    role: "employee",
   });
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -43,9 +42,11 @@ export default function Register() {
         name: form.name,
         email: form.email,
         password: form.password,
-        role: form.role,
       });
-      navigate("/dashboard", { replace: true });
+      navigate("/login", {
+        replace: true,
+        state: { message: "Account created successfully. Please sign in." },
+      });
     } catch (requestError) {
       setError(
         requestError.response?.data?.message ||
@@ -95,7 +96,8 @@ export default function Register() {
                 Join SmartTime
               </h2>
               <p className="mt-3 text-sm leading-6 text-slate-500">
-                Use your company details to get started.
+                New accounts are created with Employee access. Use your company
+                details to get started.
               </p>
             </div>
             <form className="space-y-5" onSubmit={handleSubmit}>
@@ -185,20 +187,6 @@ export default function Register() {
                   />
                 </label>
               </div>
-              <label className="block">
-                <span className="mb-2 block text-sm font-semibold text-slate-700">
-                  Role
-                </span>
-                <select
-                  name="role"
-                  value={form.role}
-                  onChange={handleChange}
-                  className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm capitalize outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10"
-                >
-                  <option value="employee">Employee</option>
-                  <option value="manager">Manager</option>
-                </select>
-              </label>
               <button
                 type="submit"
                 disabled={submitting}

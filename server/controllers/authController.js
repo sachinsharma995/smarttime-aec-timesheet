@@ -35,7 +35,7 @@ const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
 export const registerUser = async (req, res) => {
   try {
-    const { name, email, password, role = "employee" } = req.body;
+    const { name, email, password } = req.body;
 
     if (
       typeof name !== "string" ||
@@ -43,13 +43,12 @@ export const registerUser = async (req, res) => {
       typeof email !== "string" ||
       !isValidEmail(email.trim()) ||
       typeof password !== "string" ||
-      password.length < 8 ||
-      !["employee", "manager"].includes(role)
+      password.length < 8
     ) {
       return res.status(400).json({
         success: false,
         message:
-          "Name, a valid email, a password of at least 8 characters, and a valid role are required",
+          "Name, a valid email, and a password of at least 8 characters are required",
       });
     }
 
@@ -68,11 +67,8 @@ export const registerUser = async (req, res) => {
       name: name.trim(),
       email: normalizedEmail,
       password: hashedPassword,
-      role,
+      role: "employee",
     });
-    const token = generateToken(user._id.toString());
-
-    res.cookie(COOKIE_NAME, token, getAuthCookieOptions());
     return res.status(201).json({
       success: true,
       user: getSafeUser(user),

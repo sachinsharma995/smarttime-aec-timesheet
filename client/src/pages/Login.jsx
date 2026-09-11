@@ -1,15 +1,17 @@
 import { ArrowRight, LockKeyhole, Mail } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import Loader from "../components/Loader";
 import { useAuth } from "../context/AuthContext";
 
 export default function Login() {
   const { login } = useAuth();
+  const location = useLocation();
   const navigate = useNavigate();
   const [form, setForm] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const success = location.state?.message;
 
   const handleChange = (event) => {
     setForm((current) => ({
@@ -84,6 +86,11 @@ export default function Login() {
           </div>
 
           <form className="space-y-5" onSubmit={handleSubmit}>
+            {success && (
+              <p className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
+                {success}
+              </p>
+            )}
             {error && (
               <p className="rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
                 {error}

@@ -23,8 +23,6 @@ export function AuthProvider({ children }) {
 
   const register = async (userData) => {
     const response = await api.post("/auth/register", userData);
-    setUser(response.data.user);
-    toast.success("Account created successfully.");
     return response.data;
   };
 
