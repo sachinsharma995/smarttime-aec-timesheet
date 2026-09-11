@@ -14,10 +14,13 @@ dotenv.config();
 
 const app = express();
 const port = Number(process.env.PORT) || 5000;
+const normalizeOrigin = (url) => url.trim().replace(/\/+$/, "");
 const clientUrls = (process.env.CLIENT_URL || "http://localhost:5173")
   .split(",")
-  .map((url) => url.trim())
+  .map(normalizeOrigin)
   .filter(Boolean);
+
+app.set("trust proxy", 1);
 
 app.use(
   cors({

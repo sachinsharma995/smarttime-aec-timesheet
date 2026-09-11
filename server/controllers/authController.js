@@ -4,14 +4,20 @@ import User from "../models/User.js";
 
 const COOKIE_NAME = "smarttime_token";
 const TOKEN_MAX_AGE = 7 * 24 * 60 * 60 * 1000;
+const isProductionDeployment = () =>
+  process.env.NODE_ENV === "production" || process.env.RENDER === "true";
 
-export const getAuthCookieOptions = () => ({
-  httpOnly: true,
-  secure: process.env.NODE_ENV === "production",
-  sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-  maxAge: TOKEN_MAX_AGE,
-  path: "/",
-});
+export const getAuthCookieOptions = () => {
+  const isProduction = isProductionDeployment();
+
+  return {
+    httpOnly: true,
+    secure: isProduction,
+    sameSite: isProduction ? "none" : "lax",
+    maxAge: TOKEN_MAX_AGE,
+    path: "/",
+  };
+};
 
 const getSafeUser = (user) => ({
   id: user._id,
