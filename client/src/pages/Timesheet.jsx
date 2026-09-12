@@ -124,7 +124,7 @@ function FormField({ label, children, className = "" }) {
 
 const inputClassName =
   "w-full rounded-xl border border-slate-200 bg-white px-3.5 py-3 text-sm text-slate-800 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10";
-const dateTimeInputClassName = `${inputClassName} appearance-auto`;
+const dateTimeInputClassName = `${inputClassName} h-[46px] min-w-0 py-0 pr-10 leading-5 appearance-auto`;
 
 export default function Timesheet() {
   const [timesheets, setTimesheets] = useState([]);
