@@ -12,6 +12,7 @@ import { useEffect, useState } from "react";
 import Loader from "../components/Loader";
 import ConfirmModal from "../components/ConfirmModal";
 import toast from "react-hot-toast";
+import { useAuth } from "../context/AuthContext";
 import {
   addProjectMember,
   createProject,
@@ -207,6 +208,8 @@ function ProjectModal({ form, readOnly, saving, onChange, onClose, onSubmit }) {
 }
 
 export default function Projects() {
+  const { user } = useAuth();
+  const isManager = user?.role === "manager";
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -341,13 +344,15 @@ export default function Projects() {
             Keep project scope, people, and delivery dates in view.
           </p>
         </div>
-        <button
-          type="button"
-          onClick={() => openModal()}
-          className="inline-flex w-fit items-center gap-2 rounded-xl bg-blue-600 px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-600/20 hover:bg-blue-700"
-        >
-          <Plus size={17} /> Create project
-        </button>
+        {isManager && (
+          <button
+            type="button"
+            onClick={() => openModal()}
+            className="inline-flex w-fit items-center gap-2 rounded-xl bg-blue-600 px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-600/20 hover:bg-blue-700"
+          >
+            <Plus size={17} /> Create project
+          </button>
+        )}
       </section>
       {(error || success) && (
         <div
@@ -437,42 +442,46 @@ export default function Projects() {
                             title={member.email}
                           >
                             {member.name}
-                            <button
-                              type="button"
-                              onClick={() =>
-                                handleRemoveMember(project._id, member._id)
-                              }
-                              className="hidden text-slate-400 hover:text-rose-600 group-hover:block"
-                              aria-label={`Remove ${member.name}`}
-                            >
-                              <X size={12} />
-                            </button>
+                            {isManager && (
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  handleRemoveMember(project._id, member._id)
+                                }
+                                className="hidden text-slate-400 hover:text-rose-600 group-hover:block"
+                                aria-label={`Remove ${member.name}`}
+                              >
+                                <X size={12} />
+                              </button>
+                            )}
                           </span>
                         ))}
                       </div>
-                      <div className="mt-3 flex gap-2">
-                        <input
-                          value={memberEmails[project._id] || ""}
-                          onChange={(event) =>
-                            setMemberEmails((current) => ({
-                              ...current,
-                              [project._id]: event.target.value,
-                            }))
-                          }
-                          className="min-w-0 flex-1 rounded-lg border border-slate-200 px-2.5 py-1.5 text-xs outline-none focus:border-blue-500"
-                          placeholder="Member email"
-                          type="email"
-                        />
-                        <button
-                          type="button"
-                          onClick={() => handleAddMember(project._id)}
-                          className="rounded-lg bg-slate-100 p-1.5 text-slate-500 hover:bg-blue-50 hover:text-blue-600"
-                          aria-label="Add project member"
-                          title="Add member"
-                        >
-                          <UserPlus size={15} />
-                        </button>
-                      </div>
+                      {isManager && (
+                        <div className="mt-3 flex gap-2">
+                          <input
+                            value={memberEmails[project._id] || ""}
+                            onChange={(event) =>
+                              setMemberEmails((current) => ({
+                                ...current,
+                                [project._id]: event.target.value,
+                              }))
+                            }
+                            className="min-w-0 flex-1 rounded-lg border border-slate-200 px-2.5 py-1.5 text-xs outline-none focus:border-blue-500"
+                            placeholder="Member email"
+                            type="email"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => handleAddMember(project._id)}
+                            className="rounded-lg bg-slate-100 p-1.5 text-slate-500 hover:bg-blue-50 hover:text-blue-600"
+                            aria-label="Add project member"
+                            title="Add member"
+                          >
+                            <UserPlus size={15} />
+                          </button>
+                        </div>
+                      )}
                     </td>
                     <td className="px-6 py-5">
                       <div className="flex justify-end gap-1">
@@ -485,24 +494,28 @@ export default function Projects() {
                         >
                           <Eye size={16} />
                         </button>
-                        <button
-                          type="button"
-                          onClick={() => openModal(project)}
-                          className="rounded-lg p-2 text-slate-400 hover:bg-slate-100 hover:text-slate-800"
-                          aria-label="Edit project"
-                          title="Edit"
-                        >
-                          <Edit3 size={16} />
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => handleDelete(project._id)}
-                          className="rounded-lg p-2 text-slate-400 hover:bg-rose-50 hover:text-rose-600"
-                          aria-label="Delete project"
-                          title="Delete"
-                        >
-                          <Trash2 size={16} />
-                        </button>
+                        {isManager && (
+                          <>
+                            <button
+                              type="button"
+                              onClick={() => openModal(project)}
+                              className="rounded-lg p-2 text-slate-400 hover:bg-slate-100 hover:text-slate-800"
+                              aria-label="Edit project"
+                              title="Edit"
+                            >
+                              <Edit3 size={16} />
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => handleDelete(project._id)}
+                              className="rounded-lg p-2 text-slate-400 hover:bg-rose-50 hover:text-rose-600"
+                              aria-label="Delete project"
+                              title="Delete"
+                            >
+                              <Trash2 size={16} />
+                            </button>
+                          </>
+                        )}
                       </div>
                     </td>
                   </tr>
