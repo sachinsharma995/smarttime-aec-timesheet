@@ -1,4 +1,5 @@
 import {
+  CalendarDays,
   Check,
   Clock3,
   Edit3,
@@ -53,6 +54,18 @@ const toDateTimeInput = (value) => {
   const date = new Date(value);
   const pad = (part) => String(part).padStart(2, "0");
   return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
+};
+
+const formatCompactDate = (value) => {
+  if (!value) return "";
+  const [year, month, day] = String(value).slice(0, 10).split("-");
+  return year && month && day ? `${day}-${month}-${year.slice(-2)}` : "";
+};
+
+const formatCompactDateTime = (value) => {
+  if (!value) return "";
+  const [date, time = ""] = value.split("T");
+  return `${formatCompactDate(date)}${time ? ` ${time.slice(0, 5)}` : ""}`;
 };
 
 const getDuration = (startTime, endTime) => {
@@ -122,9 +135,45 @@ function FormField({ label, children, className = "" }) {
   );
 }
 
+function CompactPickerInput({
+  type,
+  name,
+  value,
+  displayValue,
+  onChange,
+  label,
+  Icon,
+  required = false,
+}) {
+  return (
+    <span className="relative block">
+      <input
+        className={`${inputClassName} cursor-pointer pr-12`}
+        type="text"
+        value={displayValue}
+        readOnly
+        tabIndex={-1}
+        aria-hidden="true"
+        placeholder={type === "date" ? "dd-mm-yy" : "dd-mm-yy hh:mm"}
+      />
+      <span className="pointer-events-none absolute inset-y-0 right-0 flex w-11 items-center justify-center text-slate-400">
+        <Icon size={17} />
+      </span>
+      <input
+        className="absolute inset-0 z-10 h-full w-full cursor-pointer opacity-0"
+        type={type}
+        name={name}
+        value={value}
+        onChange={onChange}
+        aria-label={label}
+        required={required}
+      />
+    </span>
+  );
+}
+
 const inputClassName =
   "w-full rounded-xl border border-slate-200 bg-white px-3.5 py-3 text-sm text-slate-800 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10";
-const dateTimeInputClassName = `${inputClassName} appearance-auto`;
 
 export default function Timesheet() {
   const [timesheets, setTimesheets] = useState([]);
@@ -684,12 +733,14 @@ export default function Timesheet() {
           className="grid gap-5 md:grid-cols-2 lg:grid-cols-7 lg:items-end"
         >
           <FormField label="Date">
-            <input
-              className={dateTimeInputClassName}
+            <CompactPickerInput
               type="date"
               name="date"
               value={form.date}
+              displayValue={formatCompactDate(form.date)}
               onChange={handleFormChange}
+              label="Date"
+              Icon={CalendarDays}
               required
             />
           </FormField>
@@ -737,21 +788,25 @@ export default function Timesheet() {
             />
           </FormField>
           <FormField label="Start time">
-            <input
-              className={dateTimeInputClassName}
+            <CompactPickerInput
               type="datetime-local"
               name="startTime"
               value={form.startTime}
+              displayValue={formatCompactDateTime(form.startTime)}
               onChange={handleFormChange}
+              label="Start time"
+              Icon={Clock3}
             />
           </FormField>
           <FormField label="End time">
-            <input
-              className={dateTimeInputClassName}
+            <CompactPickerInput
               type="datetime-local"
               name="endTime"
               value={form.endTime}
+              displayValue={formatCompactDateTime(form.endTime)}
               onChange={handleFormChange}
+              label="End time"
+              Icon={Clock3}
             />
           </FormField>
           <FormField label="Duration (hours)">
