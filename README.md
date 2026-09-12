@@ -1,53 +1,182 @@
 # SmartTime
 
-Intelligent Timesheet & Productivity Platform
+**Intelligent Timesheet & Productivity Platform for AEC teams**
+
+Built for the **ArchScale Guild Hackathon** — Problem Statement **AS-04: Reinvent the Timesheet**.
+
+## Overview
+
+SmartTime is an intelligent timesheet and productivity platform designed for Architecture, Engineering, and Construction (AEC) teams. It helps employees track time, manage project tasks, and create structured timesheets with AI assistance. Managers can review submissions, provide feedback, and understand team and project activity through analytics.
 
 ## Problem
 
-Traditional timesheets are manual, time-consuming and difficult to analyze.
+Traditional timesheets are often manual, repetitive, and difficult to analyze. Employees spend time re-entering work details, while managers have limited visibility into team hours, project effort, and productivity. This makes timesheet review slower and project-level decision-making harder.
 
 ## Solution
 
-SmartTime simplifies time tracking through a start/stop timer, project and task-based timesheets, analytics, manager approval and AI-assisted timesheet creation.
+SmartTime streamlines the workflow with:
 
-## Features
+- A start/stop timer for active work tracking.
+- Project- and task-based time entries.
+- An AI Timesheet Assistant for structuring work descriptions.
+- A timesheet submission workflow.
+- Manager approval or rejection with comments.
+- An analytics dashboard for time visibility.
+- AI-generated weekly work summaries.
 
-- Authentication
+## Key Features
+
+- JWT authentication
 - Employee and Manager roles
+- Secure httpOnly cookie authentication
+- Project management
+- Task management
 - Start/Stop timer
-- Timesheet management
-- Projects and Tasks
-- Manager approval/rejection
-- Analytics dashboard
+- Manual timesheet entries
 - AI Timesheet Assistant
-- AI Weekly Work Summary
+- Timesheet submission
+- Manager approval/rejection with comments
+- Analytics dashboard
+- Weekly work summary
+- Responsive UI
+
+## Employee Workflow
+
+```text
+Register/Login
+  → Select Project & Task
+  → Start Timer or Add Timesheet
+  → Use AI Assistant if needed
+  → Save Timesheet
+  → Submit Timesheet
+  → Manager Review
+```
+
+## Manager Workflow
+
+```text
+Manager Login
+  → Manager Dashboard
+  → Review Submitted Timesheets
+  → Approve or Reject
+  → Monitor Team Hours
+  → View Analytics
+```
+
+## AI Integration
+
+SmartTime uses Google Gemini to help structure timesheet entries and generate weekly work summaries. AI requests are made only by the Express backend. The Gemini API key is stored in server environment variables and is never exposed to the React client.
 
 ## Tech Stack
+
+### Frontend
 
 - React.js
 - Vite
 - Tailwind CSS
+- React Router
+- Axios
+- Recharts
+
+### Backend
+
 - Node.js
 - Express.js
-- MongoDB
 - Mongoose
 - JWT
-- Recharts
-- AI API
+- bcryptjs
+- cookie-parser
+
+### Database
+
+- MongoDB Atlas
+
+### AI
+
+- Google Gemini API
+
+### Deployment
+
+- Vercel
+- Render
+- MongoDB Atlas
 
 ## Architecture
 
 ```text
-React → Express → MongoDB
-              ↓
-            AI API
+React Client
+      ↓
+Express REST API
+      ↓
+MongoDB Atlas
+
+Express Backend
+      ↓
+Google Gemini API
 ```
 
-The AI API is accessed only by the backend. The AI API key is never exposed to the React client.
+Gemini is accessed only from the Express backend.
+
+## Project Structure
+
+```text
+smarttime/
+├── client/
+│   ├── public/
+│   ├── src/
+│   │   ├── components/
+│   │   ├── context/
+│   │   ├── pages/
+│   │   ├── services/
+│   │   ├── App.jsx
+│   │   └── main.jsx
+│   ├── .env.example
+│   ├── package.json
+│   ├── vercel.json
+│   └── vite.config.js
+├── server/
+│   ├── config/
+│   ├── controllers/
+│   ├── middleware/
+│   ├── models/
+│   ├── routes/
+│   ├── scripts/
+│   ├── services/
+│   ├── .env.example
+│   ├── package.json
+│   └── server.js
+└── README.md
+```
+
+## Live Demo
+
+- Frontend: [smarttime-aec-timesheet.vercel.app](https://smarttime-aec-timesheet.vercel.app)
+- Backend health check: [smarttime-aec-timesheet.onrender.com/api/health](https://smarttime-aec-timesheet.onrender.com/api/health)
+- GitHub: [sachinsharma995/smarttime-aec-timesheet](https://github.com/sachinsharma995/smarttime-aec-timesheet)
+
+## Demo Video
+
+Demo video: [Add your 3–5 minute walkthrough video link here]
+
+## Screenshots
+
+<!-- Add Dashboard screenshot here. -->
+
+<!-- Add AI Timesheet Assistant screenshot here. -->
+
+<!-- Add Timesheet screenshot here. -->
+
+<!-- Add Projects screenshot here. -->
+
+<!-- Add Tasks screenshot here. -->
+
+<!-- Add Manager Approval screenshot here. -->
+
+<!-- Add Analytics screenshot here. -->
 
 ## Local Setup
 
-Clone the repository using your Git provider, then enter the project directory:
+Clone the repository, then open the project directory:
 
 ```bash
 cd smarttime
@@ -57,7 +186,9 @@ Do not commit credentials or environment files.
 
 ### Server
 
-Create the server environment file from the example and set your local values:
+Create the server environment file from the example, set local values, and start the API.
+
+**Windows (PowerShell)**
 
 ```powershell
 cd server
@@ -66,11 +197,20 @@ npm install
 npm run dev
 ```
 
-On macOS or Linux, use `cp .env.example .env` instead of `copy`.
+**macOS/Linux**
+
+```bash
+cd server
+cp .env.example .env
+npm install
+npm run dev
+```
 
 ### Client
 
-Open a second terminal and create the client environment file:
+Open a second terminal, create the client environment file, and start Vite.
+
+**Windows (PowerShell)**
 
 ```powershell
 cd client
@@ -79,34 +219,42 @@ npm install
 npm run dev
 ```
 
-On macOS or Linux, use `cp .env.example .env` instead of `copy`.
+**macOS/Linux**
 
-The client development server uses the Vite development port. The server port and client API URL are controlled by environment variables.
+```bash
+cd client
+cp .env.example .env
+npm install
+npm run dev
+```
+
+The client development server uses Vite's development port. The server port and client API URL are controlled by environment variables.
 
 ## Environment Variables
 
 ### Server environment
 
-Configure these variables in `server/.env`:
+Configure these values in `server/.env`. Start with [server/.env.example](server/.env.example).
 
 - `PORT`: Port used by the Express server.
-- `MONGO_URI`: MongoDB connection string for the local database or MongoDB Atlas.
-- `JWT_SECRET`: A strong private secret used to sign authentication tokens.
-- `CLIENT_URL`: The frontend origin allowed by the backend CORS configuration.
-- `AI_API_KEY`: Private API key for the configured AI provider.
-- `AI_API_URL`: AI provider chat-completions endpoint, when using a custom provider.
-- `AI_MODEL`: AI model name used by the backend AI service.
+- `MONGO_URI`: MongoDB connection string for a local database or MongoDB Atlas.
+- `JWT_SECRET`: Strong private secret used to sign authentication tokens.
+- `CLIENT_URL`: Frontend origin allowed by the backend CORS configuration.
+- `AI_API_KEY`: Private Google Gemini API key used by the backend.
+- `AI_MODEL`: Gemini model name used by the backend (for example, `gemini-2.5-flash`).
+- `AI_API_URL`: Optional provider URL retained in the environment template; the current Gemini SDK integration uses `AI_API_KEY` and `AI_MODEL` and does not require a separate URL.
 - `NODE_ENV`: Use `development` locally and `production` when deployed.
+- `MANAGER_EMAIL` and `MANAGER_PASSWORD`: Credentials used by the optional manager seed script.
 
-Use [server/.env.example](server/.env.example) as the template. Never commit `server/.env`, JWT secrets, MongoDB credentials or AI API keys.
+Never commit `server/.env`, JWT secrets, MongoDB credentials, manager credentials, or AI API keys.
 
 ### Client environment
 
-Configure this variable in `client/.env`:
+Configure this value in `client/.env`. Start with [client/.env.example](client/.env.example).
 
-- `VITE_API_URL`: The backend API base URL ending with `/api`. For local development, use the local server API URL. For deployment, use the actual Render API URL.
+- `VITE_API_URL`: Backend API base URL ending with `/api`. Use the local API URL during development and the deployed Render API URL in production.
 
-Use [client/.env.example](client/.env.example) as the template. Do not put private credentials in Vite environment variables.
+Do not put private credentials in Vite environment variables.
 
 ## Deployment
 
@@ -116,9 +264,9 @@ Deploy the `client` directory as the Vercel project root.
 
 - Build command: `npm run build`
 - Output directory: `dist`
-- Set `VITE_API_URL` to the actual deployed Render API base URL.
+- Set `VITE_API_URL` to the deployed Render API base URL.
 
-The [client/vercel.json](client/vercel.json) configuration keeps React Router routes working after a browser refresh.
+[client/vercel.json](client/vercel.json) preserves React Router routes on browser refresh.
 
 ### Backend: Render
 
@@ -127,34 +275,29 @@ Deploy the `server` directory as a Render Web Service.
 - Build command: `npm install`
 - Start command: `npm start`
 
-Configure `PORT`, `MONGO_URI`, `JWT_SECRET`, `CLIENT_URL`, `AI_API_KEY`, `AI_API_URL`, `AI_MODEL` and `NODE_ENV` in the Render environment settings. Use the actual Vercel origin for `CLIENT_URL`.
+Configure `PORT`, `MONGO_URI`, `JWT_SECRET`, `CLIENT_URL`, `AI_API_KEY`, `AI_MODEL`, and `NODE_ENV` in Render. Set `CLIENT_URL` to the deployed Vercel origin.
 
 ### Database: MongoDB Atlas
 
-Create a MongoDB Atlas cluster and database user, configure Network Access for the Render service, and store the Atlas connection string in Render as `MONGO_URI`. Never place the connection string in source code or commit it to Git.
-
-## Health Check
-
-The backend exposes:
-
-```text
-GET /api/health
-```
-
-It returns:
-
-```json
-{
-  "success": true,
-  "message": "SmartTime API is running"
-}
-```
+Create an Atlas cluster and database user, allow Render through Network Access, and set the Atlas connection string as `MONGO_URI` in Render. Never place the connection string in source code or commit it to Git.
 
 ## Security
 
-- Passwords are hashed by the backend.
+- Passwords are hashed by the backend with bcryptjs.
 - JWTs are stored in httpOnly cookies and are not exposed to frontend JavaScript.
-- AI requests are made only by the backend.
+- Gemini API requests and credentials remain backend-only.
 - CORS is restricted to the configured frontend origin.
-- Manager APIs enforce server-side role authorization.
-- `.env` files, secrets, logs, build output and dependencies are ignored by Git.
+- Project, task, and timesheet management permissions are enforced with server-side manager authorization.
+- Environment secrets are excluded from Git.
+
+## Hackathon Value / Why SmartTime
+
+SmartTime gives AEC teams better visibility into time spent across projects while reducing repetitive timesheet work. Structured entries, faster manager review, project-level productivity visibility, and AI-assisted reporting make day-to-day reporting more practical for teams.
+
+## Future Improvements
+
+- Attendance integration
+- Notifications and reminders
+- Advanced team productivity insights
+- Payroll integration
+- Mobile application
