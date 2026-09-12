@@ -1,5 +1,4 @@
 import {
-  CalendarDays,
   Check,
   Clock3,
   Edit3,
@@ -125,6 +124,7 @@ function FormField({ label, children, className = "" }) {
 
 const inputClassName =
   "w-full rounded-xl border border-slate-200 bg-white px-3.5 py-3 text-sm text-slate-800 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10";
+const dateTimeInputClassName = `${inputClassName} appearance-auto`;
 
 export default function Timesheet() {
   const [timesheets, setTimesheets] = useState([]);
@@ -684,20 +684,14 @@ export default function Timesheet() {
           className="grid gap-5 md:grid-cols-2 lg:grid-cols-7 lg:items-end"
         >
           <FormField label="Date">
-            <span className="relative block">
-              <CalendarDays
-                className="absolute left-3.5 top-3.5 text-slate-400"
-                size={17}
-              />
-              <input
-                className={`${inputClassName} pl-10`}
-                type="date"
-                name="date"
-                value={form.date}
-                onChange={handleFormChange}
-                required
-              />
-            </span>
+            <input
+              className={dateTimeInputClassName}
+              type="date"
+              name="date"
+              value={form.date}
+              onChange={handleFormChange}
+              required
+            />
           </FormField>
           <FormField label="Project">
             <select
@@ -744,7 +738,7 @@ export default function Timesheet() {
           </FormField>
           <FormField label="Start time">
             <input
-              className={inputClassName}
+              className={dateTimeInputClassName}
               type="datetime-local"
               name="startTime"
               value={form.startTime}
@@ -753,7 +747,7 @@ export default function Timesheet() {
           </FormField>
           <FormField label="End time">
             <input
-              className={inputClassName}
+              className={dateTimeInputClassName}
               type="datetime-local"
               name="endTime"
               value={form.endTime}

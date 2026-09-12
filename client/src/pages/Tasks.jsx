@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import Loader from "../components/Loader";
 import ConfirmModal from "../components/ConfirmModal";
 import toast from "react-hot-toast";
+import { useAuth } from "../context/AuthContext";
 import {
   createTask,
   deleteTask,
@@ -210,6 +211,7 @@ function TaskModal({ form, projects, saving, onChange, onClose, onSubmit }) {
 }
 
 export default function Tasks() {
+  const { user } = useAuth();
   const [projects, setProjects] = useState([]);
   const [tasks, setTasks] = useState([]);
   const [filters, setFilters] = useState({
@@ -339,13 +341,15 @@ export default function Tasks() {
             Turn project scope into clear, accountable next steps.
           </p>
         </div>
-        <button
-          type="button"
-          onClick={() => openModal()}
-          className="inline-flex w-fit items-center gap-2 rounded-xl bg-blue-600 px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-600/20 hover:bg-blue-700"
-        >
-          <Plus size={17} /> Create task
-        </button>
+        {user?.role === "manager" && (
+          <button
+            type="button"
+            onClick={() => openModal()}
+            className="inline-flex w-fit items-center gap-2 rounded-xl bg-blue-600 px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-600/20 hover:bg-blue-700"
+          >
+            <Plus size={17} /> Create task
+          </button>
+        )}
       </section>
       {(error || success) && (
         <div
