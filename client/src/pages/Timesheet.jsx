@@ -795,7 +795,7 @@ export default function Timesheet() {
               displayValue={formatCompactDateTime(form.startTime)}
               onChange={handleFormChange}
               label="Start time"
-              Icon={Clock3}
+              Icon={CalendarDays}
             />
           </FormField>
           <FormField label="End time">
@@ -806,7 +806,7 @@ export default function Timesheet() {
               displayValue={formatCompactDateTime(form.endTime)}
               onChange={handleFormChange}
               label="End time"
-              Icon={Clock3}
+              Icon={CalendarDays}
             />
           </FormField>
           <FormField label="Duration (hours)">
